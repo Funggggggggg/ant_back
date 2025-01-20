@@ -77,9 +77,10 @@ const schema = new Schema(
 // 資料產生方式 function 內的 this 代表一筆資料
 schema.virtual('cartQuantity').get(function () {
   const user = this
+  // reduce 是陣列的方法
   return user.cart.reduce((total, current) => {
     return total + current.quantity
-  }, 0)
+  }, 0) //0是指 total 的初始值
 })
 
 // mongoose middleware(看官網)
