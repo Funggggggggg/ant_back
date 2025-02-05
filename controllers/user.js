@@ -35,11 +35,14 @@ export const create = async (req, res) => {
   }
 }
 
+// 簽一組 jwt 序號
+// 簽 (sign) 一組 jwt 序號並存進資料庫，以及各種前端顯示
 export const login = async (req, res) => {
   try {
-    // jwt.sign(儲存資料, SECRET, 設定)
-    // 裡面不要放太複雜或機密資料
-    // const token = jwt.sign({ _id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '5 s' })
+    // jwt.sign (儲存資料, SECRET 驗證密鑰, {設定}) => 裡面不要放太複雜或機密資料
+    // 1. jwt.sign({ _id: 使用了 middleware/auth.js/68 的物件 }
+    // 2. SECRET 驗證密鑰 不能寫死，放在 .env 中
+    // 3. 設定過期時間 ('5 s' 5秒過期測試)
     const token = jwt.sign({ _id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '7 days' })
     req.user.tokens.push(token)
     await req.user.save()

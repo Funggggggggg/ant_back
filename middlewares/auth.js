@@ -1,13 +1,14 @@
-import passport from 'passport'
-import { StatusCodes } from 'http-status-codes'
+// 身分驗證的 middleware
+import passport from 'passport' // 是套件不是檔案
+import { StatusCodes } from 'http-status-codes' //狀態碼
 import jsonwebtoken from 'jsonwebtoken'
 import UserRole from '../enums/UserRole.js'
 
 export const login = (req, res, next) => {
   // 使用 passport 的 login 驗證方式
   // passport.authenticate(驗證方式名稱, 選項, 處理的function)
-  // session: false 停用 cookie
-  // (error, user, info) 對應 done() 的三個東西
+  // session: false 停用 cookie => 網域不同使用 cookie 會被阻擋 => 用 jwt 來做驗證
+  // (error, user, info) 對應 passport.js 中 done() 的三個東西
   passport.authenticate('login', { session: false }, (error, user, info) => {
     console.log(error, user, info)
     // 如果沒有收到資料或發生錯誤
@@ -63,7 +64,7 @@ export const jwt = (req, res, next) => {
         })
       }
     }
-    // 將查詢到的使用者放入 req 中給後續的 controller 或 middleware 使用
+    // 將查詢到的使用者放入 req 的物件中，給後續的 controller 或 middleware 使用
     req.user = data.user
     req.token = data.token
     // 繼續下一步
