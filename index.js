@@ -5,7 +5,7 @@ import { StatusCodes } from 'http-status-codes'
 import routerUser from './routers/user.js'
 import routerProduct from './routers/product.js'
 import routerOrder from './routers/order.js'
-import cors from 'cors'
+import cors from 'cors' //搭配 express 處理跨域請求設定
 import './passport.js'
 
 mongoose
@@ -21,8 +21,9 @@ mongoose
 
 const app = express()
 
-app.use(cors())
+app.use(cors()) //允許所有跨網域的請求
 
+// 進階寫法
 // app.use(
 //   // cors 做跨域請求設定(前後網域不同)
 //   cors({

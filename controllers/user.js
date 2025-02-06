@@ -49,6 +49,7 @@ export const login = async (req, res) => {
     res.status(StatusCodes.OK).json({
       success: true,
       message: '',
+      // 2. 登入後會收到以下東西 (再回到前端 src/pages/login)
       result: {
         token,
         account: req.user.account,
