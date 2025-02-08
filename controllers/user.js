@@ -1,4 +1,4 @@
-import User from '../models/user.js'
+import User from '../models/user.js' // User 是自己取的 (匿名導出)
 import Product from '../models/product.js'
 import { StatusCodes } from 'http-status-codes'
 import jwt from 'jsonwebtoken'
