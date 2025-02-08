@@ -3,7 +3,8 @@ import express from 'express'
 import mongoose from 'mongoose'
 import { StatusCodes } from 'http-status-codes'
 import routerUser from './routers/user.js'
-import routerProduct from './routers/product.js'
+import routerPost from './routers/post.js'
+// FIXME
 import routerOrder from './routers/order.js'
 import cors from 'cors' //搭配 express 處理跨域請求設定
 import './passport.js'
@@ -50,12 +51,13 @@ app.use(express.json())
 app.use((error, req, res, next) => {
   res.status(StatusCodes.BAD_REQUEST).json({
     success: false,
-    message: 'requestFormatError',
+    message: '請求格式錯誤',
   })
 })
 
 app.use('/user', routerUser)
-app.use('/product', routerProduct)
+app.use('/post', routerPost)
+// FIXME
 app.use('/order', routerOrder)
 
 app.listen(process.env.PORT || 4000, () => {

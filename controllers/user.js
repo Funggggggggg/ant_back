@@ -16,8 +16,7 @@ export const create = async (req, res) => {
     if (error.name === 'MongoServerError' && error.code === 11000) {
       res.status(StatusCodes.CONFLICT).json({
         success: false,
-        //  帳號重複
-        message: 'userAccountDuplicate',
+        message: '使用者帳號重複',
       })
     } else if (error.name === 'ValidationError') {
       const key = Object.keys(error.errors)[0]
@@ -29,7 +28,7 @@ export const create = async (req, res) => {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         success: false,
         //  未知錯誤
-        message: 'serverError',
+        message: '伺服器錯誤',
       })
     }
   }
@@ -61,7 +60,7 @@ export const login = async (req, res) => {
     console.log(error)
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: 'serverError',
+      message: '伺服器錯誤',
     })
   }
 }
@@ -97,7 +96,7 @@ export const refresh = async (req, res) => {
     console.log(error)
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: 'serverError',
+      message: '伺服器錯誤',
     })
   }
 }
@@ -116,11 +115,11 @@ export const logout = async (req, res) => {
     console.log(error)
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: 'serverError',
+      message: '伺服器錯誤',
     })
   }
 }
-// 購物車
+// FIXME 購物車
 // 這段程式碼的目的是根據使用者的 ID 查詢並返回該使用者的購物車資料，並且把包含商品資料的購物車傳回給客戶端。
 export const getCart = async (req, res) => {
   try {
@@ -135,7 +134,7 @@ export const getCart = async (req, res) => {
     console.log(error)
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: 'serverError',
+      message: '伺服器錯誤',
     })
   }
 }
@@ -177,17 +176,17 @@ export const updateCart = async (req, res) => {
     if (error.name === 'CastError' || error.message === 'ID') {
       res.status(StatusCodes.NOT_FOUND).json({
         success: false,
-        message: 'productIdInvalid',
+        message: '商品 ID 錯誤',
       })
     } else if (error.message === 'NOT FOUND') {
       res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
-        message: 'productNotFound',
+        message: '查無商品',
       })
     } else if (error.message === 'SELL') {
       res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
-        message: 'productNotOnSell',
+        message: '商品未上架',
       })
     } else if (error.name === 'ValidationError') {
       const key = Object.keys(error.errors)[0]
@@ -198,7 +197,7 @@ export const updateCart = async (req, res) => {
     } else {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         success: false,
-        message: 'serverError',
+        message: '伺服器錯誤',
       })
     }
   }
