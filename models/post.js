@@ -22,7 +22,7 @@ const postSchema = new Schema(
       type: String,
       required: [true, '說明必填'],
     },
-    picture: {
+    image: {
       type: String,
       required: [true, '圖片必填'],
     },

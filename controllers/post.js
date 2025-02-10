@@ -1,11 +1,11 @@
 import { StatusCodes } from 'http-status-codes'
-import Product from '../models/product.js'
+import Post from '../models/post.js'
 import validator from 'validator'
 
 export const create = async (req, res) => {
   try {
     req.body.image = req.file.path || ''
-    const result = await Product.create(req.body)
+    const result = await Post.create(req.body)
     res.status(StatusCodes.OK).json({
       success: true,
       message: '',
@@ -28,10 +28,10 @@ export const create = async (req, res) => {
   }
 }
 
-// get & getAll 一模一樣，差在 Product.find({ sell: true }) => 限制只有上架的商品
+// get & getAll 一模一樣，差在 Post.find({ sell: true }) => 限制只有上架的商品
 export const get = async (req, res) => {
   try {
-    const result = await Product.find({ sell: true })
+    const result = await Post.find({ sell: true })
     res.status(StatusCodes.OK).json({
       success: true,
       message: '',
@@ -48,7 +48,7 @@ export const get = async (req, res) => {
 
 export const getAll = async (req, res) => {
   try {
-    const result = await Product.find()
+    const result = await Post.find()
     res.status(StatusCodes.OK).json({
       success: true,
       message: '',
@@ -66,7 +66,7 @@ export const getAll = async (req, res) => {
 export const getId = async (req, res) => {
   try {
     if (!validator.isMongoId(req.params.id)) throw new Error('ID')
-    const result = await Product.findById(req.params.id).orFail(new Error('NOT FOUND'))
+    const result = await Post.findById(req.params.id).orFail(new Error('NOT FOUND'))
     res.status(StatusCodes.OK).json({
       success: true,
       message: '',
@@ -74,16 +74,16 @@ export const getId = async (req, res) => {
     })
   } catch (error) {
     // 錯誤訊息可以打得詳細一點!
-    console.log('controller.product', error)
+    console.log('controller.post', error)
     if (error.name === 'CastError' || error.message === 'ID') {
       res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
-        message: 'productIdInvalid',
+        message: 'postIdInvalid',
       })
     } else if (error.message === 'NOT FOUND') {
       res.status(StatusCodes.NOT_FOUND).json({
         success: false,
-        message: 'productNotFound',
+        message: 'postNotFound',
       })
     } else {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -100,7 +100,7 @@ export const edit = async (req, res) => {
 
     // 不需要空集合'' 沒換圖的表單問題，圖片會變成空的文字
     req.body.image = req.file?.path
-    const result = await Product.findByIdAndUpdate(req.params.id, req.body, {
+    const result = await Post.findByIdAndUpdate(req.params.id, req.body, {
       runValidators: true,
       new: true,
     }).orFail(new Error('NOT FOUND'))
@@ -115,7 +115,7 @@ export const edit = async (req, res) => {
     if (error.name === 'CastError' || error.message === 'ID') {
       res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
-        message: 'productIdInvalid',
+        message: 'postIdInvalid',
       })
     } else if (error.message === 'NOT FOUND') {
       res.status(StatusCodes.NOT_FOUND).json({

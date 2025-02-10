@@ -76,7 +76,7 @@ export const admin = (req, res, next) => {
   if (req.user.role !== UserRole.ADMIN) {
     res.status(StatusCodes.FORBIDDEN).json({
       success: false,
-      message: 'userPermissionDenied',
+      message: '使用者權限不足',
     })
   } else {
     next()
