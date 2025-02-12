@@ -31,6 +31,9 @@ const postSchema = new Schema(
       default: false,
       //required: [true, '私人或公開必填'],
     },
+    like: {
+      type: Number,
+    },
     createdAt: {
       type: Date,
     },

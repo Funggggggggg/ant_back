@@ -12,7 +12,7 @@ export const create = async (req, res) => {
       result,
     })
   } catch (error) {
-    console.log(error)
+    console.log('controller post create', error)
     if (error.name === 'ValidationError') {
       const key = Object.keys(error.errors)[0]
       res.status(StatusCodes.BAD_REQUEST).json({
@@ -28,17 +28,17 @@ export const create = async (req, res) => {
   }
 }
 
-// get & getAll 一模一樣，差在 Post.find({ sell: true }) => 限制只有上架的商品
+// get & getAll 一模一樣，差在 Post.find({ isPrivate: false }) => 限制只有上架的商品
 export const get = async (req, res) => {
   try {
-    const result = await Post.find({ sell: true })
+    const result = await Post.find({ isPrivate: false })
     res.status(StatusCodes.OK).json({
       success: true,
       message: '',
       result,
     })
   } catch (error) {
-    console.log(error)
+    console.log('controller post get', error)
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: 'serverError',
@@ -55,7 +55,7 @@ export const getAll = async (req, res) => {
       result,
     })
   } catch (error) {
-    console.log(error)
+    console.log('controller post getAll', error)
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: 'serverError',
@@ -74,7 +74,7 @@ export const getId = async (req, res) => {
     })
   } catch (error) {
     // 錯誤訊息可以打得詳細一點!
-    console.log('controller.post', error)
+    console.log('controller post getId', error)
     if (error.name === 'CastError' || error.message === 'ID') {
       res.status(StatusCodes.BAD_REQUEST).json({
         success: false,

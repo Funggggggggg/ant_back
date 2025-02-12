@@ -7,10 +7,13 @@ const router = Router()
 
 // 先認證 jwt => 管理員 => 再新增
 router.post('/', auth.jwt, auth.admin, upload, post.create)
-// 這三行順序有差
-router.get('/', post.get) //沒登入者
+
+// 做三種取卡片的 API
+// 下面這三行順序有差
+router.get('/', post.get) //給沒登入者看的
 router.get('/all', auth.jwt, auth.admin, post.getAll) //給管理員看(包含沒上架的)
-router.get('/:id', post.getId) //取單個商品
-router.patch('/:id', auth.jwt, auth.admin, upload, post.edit) //編輯商品
+router.get('/:id', post.getId) //取單個卡片，沒登入者也可看
+
+router.patch('/:id', auth.jwt, auth.admin, upload, post.edit) //編輯卡片
 
 export default router
