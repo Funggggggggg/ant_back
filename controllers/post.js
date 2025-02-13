@@ -95,6 +95,7 @@ export const getId = async (req, res) => {
 }
 
 export const edit = async (req, res) => {
+  console.log(req.params.id)
   try {
     if (!validator.isMongoId(req.params.id)) throw new Error('ID')
 
@@ -111,6 +112,7 @@ export const edit = async (req, res) => {
       result,
     })
   } catch (error) {
+    console.log(error)
     // CastError 通常是指將一個無效的資料型態（例如字串）轉換為其他型態時發生的錯誤，常見於 MongoDB 中，當試圖將非數字的資料轉換為 ObjectId 時就會發生。
     if (error.name === 'CastError' || error.message === 'ID') {
       res.status(StatusCodes.BAD_REQUEST).json({
@@ -120,7 +122,7 @@ export const edit = async (req, res) => {
     } else if (error.message === 'NOT FOUND') {
       res.status(StatusCodes.NOT_FOUND).json({
         success: false,
-        message: 'productNotFound',
+        message: 'postNotFound',
       })
     } else if (error.name === 'ValidationError') {
       const key = Object.keys(error.errors)[0]

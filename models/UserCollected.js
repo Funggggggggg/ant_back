@@ -1,16 +1,16 @@
-import { Schema, ObjectId } from 'mongoose'
+import { Schema, ObjectId, model } from 'mongoose'
 
 const UserCollectedSchema = new Schema({
   user: {
     type: ObjectId,
-    ref: 'users',
+    ref: 'user',
     required: true,
   },
   postId: {
     type: [ObjectId],
-    ref: 'post',
+    ref: 'posts',
     required: true,
   },
 })
 
-export default UserCollectedSchema
+export default model('UserCollected', UserCollectedSchema)

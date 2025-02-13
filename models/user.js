@@ -1,10 +1,10 @@
 // 引入套件
-import { Schema, model, Error } from 'mongoose'
+import { Schema, model, Error, ObjectId } from 'mongoose'
 import validator from 'validator'
 import bcrypt from 'bcrypt'
 import UserRole from '../enums/UserRole.js'
-import UserCreated from '../models/UserCreated.js'
-import UserCollected from '../models/UserCollected.js'
+// import UserCreated from '../models/UserCreated.js'
+// import UserCollected from '../models/UserCollected.js'
 
 const userSchema = new Schema(
   {
@@ -40,6 +40,7 @@ const userSchema = new Schema(
     },
     tokens: {
       type: [String],
+      default: [],
     },
     role: {
       type: Number,
@@ -52,18 +53,22 @@ const userSchema = new Schema(
       type: String,
     },
     created: {
-      type: UserCreated,
+      type: ObjectId,
+      ref: 'UserCreated',
     },
-    collected: {
-      type: UserCollected,
-    },
+    collected: [
+      {
+        post: {
+          type: ObjectId,
+          ref: 'posts',
+          required: true,
+        },
+      },
+    ],
     locked: {
       type: Boolean,
       default: false,
     },
-    // lockUntil: {
-    //   type: Date, // 帳號被鎖定至某個時間，這次先不寫
-    // },
   },
   {
     versionKey: false,
@@ -108,5 +113,5 @@ userSchema.pre('save', function (next) {
   next()
 })
 
-export default model('users', userSchema)
+export default model('User', userSchema)
 // 創建一個操作 "users" collection 的 Mongoose Model，它基於 userSchema 定義的結構。

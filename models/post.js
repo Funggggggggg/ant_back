@@ -33,6 +33,7 @@ const postSchema = new Schema(
     },
     like: {
       type: Number,
+      default: '0',
     },
     createdAt: {
       type: Date,
@@ -47,4 +48,4 @@ const postSchema = new Schema(
   },
 )
 
-export default model('postings', postSchema)
+export default model('posts', postSchema)

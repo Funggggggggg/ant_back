@@ -1,5 +1,6 @@
 import User from '../models/user.js' // User 是自己取的 (匿名導出)
-import Product from '../models/product.js'
+import Post from '../models/post.js'
+import UserCollected from '../models/UserCollected.js'
 import { StatusCodes } from 'http-status-codes'
 import jwt from 'jsonwebtoken'
 import validator from 'validator' //驗證
@@ -53,7 +54,7 @@ export const login = async (req, res) => {
         token,
         account: req.user.account,
         role: req.user.role,
-        cart: req.user.cartQuantity,
+        // collected: req.user.collectedQuantity,
       },
     })
   } catch (error) {
@@ -72,7 +73,7 @@ export const profile = async (req, res) => {
     result: {
       account: req.user.account,
       role: req.user.role,
-      cart: req.user.cartQuantity,
+      // collected: req.user.collectedQuantity,
     },
   })
 }
@@ -119,15 +120,23 @@ export const logout = async (req, res) => {
     })
   }
 }
-// FIXME 購物車
-// 這段程式碼的目的是根據使用者的 ID 查詢並返回該使用者的購物車資料，並且把包含商品資料的購物車傳回給客戶端。
-export const getCart = async (req, res) => {
+
+// 這段程式碼的目的是根據使用者的 ID 查詢並返回該使用者的收藏單資料，並且把包含卡片資料的收藏單傳回給客戶端。
+export const getCollected = async (req, res) => {
   try {
-    const result = await User.findById(req.user._id, 'cart').populate('cart.product')
-    res.status(StatusCodes.OK).json({
+    const userId = req.user._id
+    const result = await User.findById(userId, 'collected').populate('collected.post')
+    if (!result || result.collected.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: '收藏清單不存在',
+      })
+    }
+    // 返回收藏清單中的所有卡片資料
+    res.status(200).json({
       success: true,
-      message: '',
-      result: result.cart,
+      message: '收藏清單已取得',
+      result: result.collected,
     })
     // 如果遇到錯誤，則返回 500 錯誤。
   } catch (error) {
@@ -138,55 +147,60 @@ export const getCart = async (req, res) => {
     })
   }
 }
-// 更新
-export const updateCart = async (req, res) => {
-  try {
-    // 檢查傳入的商品 ID 格式
-    if (!validator.isMongoId(req.body.product)) throw new Error('ID')
-    // 檢查購物車內有沒有商品
-    const idx = req.user.cart.findIndex((item) => item.product.toString() === req.body.product)
-    if (idx > -1) {
-      // 有商品，修改數量
-      const quantity = req.user.cart[idx].quantity + parseInt(req.body.quantity)
-      if (quantity > 0) {
-        // 修改後大於 0，修改數量
-        req.user.cart[idx].quantity = quantity
-      } else {
-        // 修改後小於等於 0，刪除商品
-        req.user.cart.splice(idx, 1)
-      }
-    } else {
-      // 沒有商品，檢查商品是否存在
-      const product = await Product.findById(req.body.product).orFail(new Error('NOT FOUND'))
-      // 商品沒有上架，錯誤
-      if (!product.sell) throw new Error('SELL')
 
-      req.user.cart.push({ product: req.body.product, quantity: req.body.quantity })
+// FIXME
+// 更新收藏清單
+export const updateCollected = async (req, res) => {
+  try {
+    // 檢查傳入的卡片 ID 格式
+    if (!validator.isMongoId(req.body.post)) throw new Error('ID')
+    // 檢查卡片是否存在
+    const post = await Post.findById(req.body.post).orFail(new Error('NOT FOUND'))
+    // 卡片是私人，錯誤
+    if (post.isPrivate) throw new Error('isPrivate')
+
+    // 查找使用者的收藏清單
+    let userCollected = await UserCollected.findOne({ user: req.user._id })
+    if (!userCollected) {
+      // 如果使用者沒有收藏清單，創建一個新的
+      userCollected = new UserCollected({ user: req.user._id, postId: [] })
     }
 
-    await req.user.save()
+    // 檢查收藏單內有沒有卡片
+    const idx = userCollected.postId.findIndex((item) => item.toString() === req.body.post)
+    if (idx > -1) {
+      // 卡片已經存在於收藏清單中，返回錯誤
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: '卡片已經存在於收藏清單中',
+      })
+    } else {
+      // 沒有卡片，新增到收藏清單
+      userCollected.postId.push(req.body.post)
+    }
+    await userCollected.save()
 
     res.status(StatusCodes.OK).json({
       success: true,
-      message: '',
-      result: req.user.cartQuantity,
+      message: '收藏清單已更新',
+      result: userCollected.postId,
     })
   } catch (error) {
     console.log(error)
     if (error.name === 'CastError' || error.message === 'ID') {
       res.status(StatusCodes.NOT_FOUND).json({
         success: false,
-        message: '商品 ID 錯誤',
+        message: '卡片 ID 錯誤',
       })
     } else if (error.message === 'NOT FOUND') {
       res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
-        message: '查無商品',
+        message: '查無卡片',
       })
-    } else if (error.message === 'SELL') {
+    } else if (error.message === 'isPrivate') {
       res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
-        message: '商品未上架',
+        message: '私人卡片',
       })
     } else if (error.name === 'ValidationError') {
       const key = Object.keys(error.errors)[0]

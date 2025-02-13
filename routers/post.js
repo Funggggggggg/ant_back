@@ -6,7 +6,7 @@ import upload from '../middlewares/upload.js'
 const router = Router()
 
 // 先認證 jwt => 管理員 => 再新增
-router.post('/', auth.jwt, auth.admin, upload, post.create)
+router.post('/', auth.jwt, upload, post.create)
 
 // 做三種取卡片的 API
 // 下面這三行順序有差
