@@ -5,10 +5,12 @@ const postSchema = new Schema(
     user: {
       type: Object,
       required: [true, '使用者帳號必填'],
+      values: ['haha', 'haha'],
     },
     title: {
       type: String,
       required: [true, '標題必填'],
+      value: 'haha',
     },
     category: {
       type: String,
@@ -32,8 +34,8 @@ const postSchema = new Schema(
       //required: [true, '私人或公開必填'],
     },
     like: {
-      type: Number,
-      default: '0',
+      type: Boolean,
+      default: false,
     },
     createdAt: {
       type: Date,

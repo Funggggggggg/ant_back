@@ -39,6 +39,7 @@ export const login = (req, res, next) => {
 }
 
 export const jwt = (req, res, next) => {
+  console.log('Authorization:', req.headers.authorization) // ✅ 檢查 token 是否有傳
   passport.authenticate('jwt', { session: false }, (error, data, info) => {
     console.log(error, data, info)
     if (error || !data) {
