@@ -3,6 +3,7 @@ import Post from '../models/post.js'
 import validator from 'validator'
 
 export const create = async (req, res) => {
+  console.log('222222222222', req.body)
   try {
     req.body.image = req.file.path || ''
     const result = await Post.create(req.body)
@@ -95,7 +96,8 @@ export const getId = async (req, res) => {
 }
 
 export const edit = async (req, res) => {
-  console.log(req.params.id)
+  // console.log(req.params.id)
+  console.log('111111111111', req.body)
   try {
     if (!validator.isMongoId(req.params.id)) throw new Error('ID')
 

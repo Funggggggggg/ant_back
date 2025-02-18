@@ -8,6 +8,7 @@ import validator from 'validator' //驗證
 export const create = async (req, res) => {
   try {
     await User.create(req.body)
+    console.log('333333333333', req.body)
     res.status(StatusCodes.OK).json({
       success: true,
       message: '',
@@ -54,6 +55,9 @@ export const login = async (req, res) => {
         token,
         account: req.user.account,
         role: req.user.role,
+        introduce: req.user.introduce || '', // 🛠 確保 introduce 有回傳，不為 undefined
+        collected: req.user.collected || [],
+        created: req.user.created || [],
         // collected: req.user.collectedQuantity,
       },
     })
@@ -65,15 +69,15 @@ export const login = async (req, res) => {
     })
   }
 }
-
+// profile 是一個 後端 API（controllers/user.js），用來返回 使用者的基本資訊
 export const profile = async (req, res) => {
   res.status(StatusCodes.OK).json({
     success: true,
     message: '',
     result: {
       account: req.user.account,
+      introduce: req.user.introduce,
       role: req.user.role,
-      // collected: req.user.collectedQuantity,
     },
   })
 }

@@ -1,16 +1,17 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model, ObjectId } from 'mongoose'
 
 const postSchema = new Schema(
   {
     user: {
-      type: Object,
+      type: ObjectId,
+      ref: 'users',
       required: [true, '使用者帳號必填'],
-      values: ['haha', 'haha'],
+      // values: ['haha', 'haha'],
     },
     title: {
       type: String,
       required: [true, '標題必填'],
-      value: 'haha',
+      // value: 'haha',
     },
     category: {
       type: String,
