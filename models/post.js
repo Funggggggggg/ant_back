@@ -6,7 +6,9 @@ const postSchema = new Schema(
       type: ObjectId,
       ref: 'users',
       required: [true, '使用者帳號必填'],
-      // values: ['haha', 'haha'],
+    },
+    account: {
+      type: String,
     },
     title: {
       type: String,
