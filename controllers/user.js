@@ -3,7 +3,7 @@ import Post from '../models/post.js'
 import UserCollected from '../models/UserCollected.js'
 import { StatusCodes } from 'http-status-codes'
 import jwt from 'jsonwebtoken'
-import validator from 'validator' //驗證
+import validator from 'validator' //驗證進來的 mongoDB ID 是否正確
 
 export const create = async (req, res) => {
   try {
