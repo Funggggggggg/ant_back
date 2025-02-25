@@ -14,7 +14,7 @@ router.post('/', auth.jwt, upload, post.create)
 router.get('/', post.get) //給沒登入者看的
 router.get('/all', auth.jwt, auth.admin, post.getAll) //給管理員看(包含沒上架的)
 router.get('/:id', post.getId) //取單個卡片，沒登入者也可看
-
+router.get('/userposts/:id', post.getUserAllPosts) //取多個卡片，沒登入者也可看
 router.patch('/:id', auth.jwt, auth.admin, upload, post.edit) //編輯卡片
 
 export default router

@@ -1,5 +1,5 @@
 // 引入套件
-import { Schema, model, Error, ObjectId } from 'mongoose'
+import { Schema, model, Error } from 'mongoose'
 import validator from 'validator'
 import bcrypt from 'bcrypt'
 import UserRole from '../enums/UserRole.js'
@@ -54,19 +54,19 @@ const userSchema = new Schema(
       default:
         '手部愛好者。替身使者。我的名字叫吉良吉影 33歲。住在杜王町東北部的別墅區一帶，未婚。我在龜友連鎖店服務。每天都要加班到晚上8點才能回家。我不抽煙，酒僅止於淺嚐。晚上11點睡，每天要睡足8個小時。睡前，我一定喝一杯溫牛奶，然後做20分鐘的柔軟操，上了床，馬上熟睡。一覺到天亮，決不把疲勞和壓力留到第二天。醫生都說我很正常。',
     },
-    created: {
-      type: ObjectId,
-      ref: 'UserCreated',
-    },
-    collected: [
-      {
-        post: {
-          type: ObjectId,
-          ref: 'posts',
-          required: true,
-        },
-      },
-    ],
+    // created: {
+    //   type: ObjectId,
+    //   ref: 'UserCreated',
+    // },
+    // collected: [
+    //   {
+    //     post: {
+    //       type: ObjectId,
+    //       ref: 'Post',
+    //       required: true,
+    //     },
+    //   },
+    // ],
     locked: {
       type: Boolean,
       default: false,
@@ -85,7 +85,7 @@ const userSchema = new Schema(
 // userSchema.virtual('notiQuantity').get(function () {
 //   const user = this
 //   // reduce 是陣列的方法
-//   // return user.cart.reduce((total, current) => {
+//   // return user.card.reduce((total, current) => {
 //   //   return total + current.quantity
 //   // }, 0) //0是指 total 的初始值
 // })

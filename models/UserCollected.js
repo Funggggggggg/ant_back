@@ -3,12 +3,12 @@ import { Schema, ObjectId, model } from 'mongoose'
 const UserCollectedSchema = new Schema({
   user: {
     type: ObjectId,
-    ref: 'user',
+    ref: 'User',
     required: true,
   },
   postId: {
     type: [ObjectId],
-    ref: 'posts',
+    ref: 'Post',
     required: true,
   },
 })

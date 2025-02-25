@@ -1,5 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 import Post from '../models/post.js'
+// import User from '../models/user.js'
 import validator from 'validator'
 
 export const create = async (req, res) => {
@@ -60,6 +61,42 @@ export const getAll = async (req, res) => {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: 'serverError',
+    })
+  }
+}
+
+export const getUserAllPosts = async (req, res) => {
+  try {
+    const userId = req.params.id
+    console.log(req.params.id)
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: '用戶 ID 未提供',
+      })
+    }
+
+    // 直接透過用戶 ID 查詢文章
+    const result = await Post.find({ user: userId }).populate('user', 'account email introduce')
+    console.log('取得的文章:', result)
+    if (!result || result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: '該用戶尚未發表任何文章',
+      })
+    }
+
+    res.status(200).json({
+      success: true,
+      message: '已成功獲取用戶文章',
+      result,
+    })
+  } catch (error) {
+    console.log('getUserAllPosts 錯誤:', error)
+    res.status(500).json({
+      success: false,
+      message: '伺服器錯誤，無法獲取用戶文章',
     })
   }
 }

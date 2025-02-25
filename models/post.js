@@ -4,8 +4,8 @@ const postSchema = new Schema(
   {
     user: {
       type: ObjectId,
-      ref: 'users',
-      required: [true, '使用者帳號必填'],
+      ref: 'User',
+      // required: [true, '使用者帳號必填'],
     },
     account: {
       type: String,
@@ -53,4 +53,4 @@ const postSchema = new Schema(
   },
 )
 
-export default model('posts', postSchema)
+export default model('Post', postSchema)
