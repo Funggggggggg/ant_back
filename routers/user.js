@@ -1,7 +1,7 @@
 import { Router } from 'express'
-// import { create, login } from '../controllers/user.js'
 import * as user from '../controllers/user.js'
 import * as auth from '../middlewares/auth.js'
+// import { create, login } from '../controllers/user.js'
 // import { getCollected, updateCollected } from '../controllers/user.js'
 
 const router = Router()
@@ -16,7 +16,7 @@ router.patch('/refresh', auth.jwt, user.refresh) // 舊換新
 router.delete('/logout', auth.jwt, user.logout) // 登出
 
 // 收藏文章相關
-router.get('/collected', auth.jwt, user.getCollected) // 獲取使用者收藏清單
-router.patch('/collected', auth.jwt, user.updateCollected) // 更新使用者收藏清單
+// router.get('/collected', auth.jwt, user.getCollected) // 獲取使用者收藏清單
+// router.patch('/collected', auth.jwt, user.updateCollected) // 更新使用者收藏清單
 
 export default router

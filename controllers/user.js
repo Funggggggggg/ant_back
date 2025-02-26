@@ -1,9 +1,6 @@
-import User from '../models/user.js' // User 是自己取的 (匿名導出)
-import Post from '../models/post.js'
-import UserCollected from '../models/UserCollected.js'
+import User from '../models/user.js'
 import { StatusCodes } from 'http-status-codes'
 import jwt from 'jsonwebtoken'
-import validator from 'validator' //驗證進來的 mongoDB ID 是否正確
 
 export const create = async (req, res) => {
   try {
@@ -122,96 +119,65 @@ export const logout = async (req, res) => {
   }
 }
 
-export const getCollected = async (req, res) => {
-  try {
-    const userId = req.user._id
-    const userCollected = await UserCollected.findOne({ user: userId }).populate('postId')
+// export const updateCollected = async (req, res) => {
+//   try {
+//     if (!validator.isMongoId(req.body.post)) throw new Error('ID')
+//     const post = await Post.findById(req.body.post).orFail(new Error('NOT FOUND'))
+//     if (post.isPrivate) throw new Error('isPrivate')
 
-    if (!userCollected || userCollected.postId.length === 0) {
-      return res.status(StatusCodes.NOT_FOUND).json({
-        success: false,
-        message: '收藏清單不存在',
-      })
-    }
+//     let userCollect = await UserCollect.findOne({ user: req.user._id })
+//     if (!userCollect) {
+//       userCollect = new UserCollect({ user: req.user._id, postId: [] })
+//     }
 
-    console.log('收藏清單:', userCollected.postId) // 添加日誌檢查數據
+//     const idx = userCollect.postId.findIndex((item) => item.toString() === req.body.post)
+//     // const user = await User.findById(req.user._id)
 
-    res.status(StatusCodes.OK).json({
-      success: true,
-      message: '收藏清單已取得',
-      result: userCollected.postId,
-    })
-  } catch (error) {
-    console.log(error)
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      message: '伺服器錯誤',
-    })
-  }
-}
+//     if (idx > -1) {
+//       userCollect.postId.splice(idx, 1) // 移除收藏
+//     } else {
+//       userCollect.postId.push(req.body.post) // 添加收藏
+//     }
+//     await userCollect.save()
 
-export const updateCollected = async (req, res) => {
-  try {
-    if (!validator.isMongoId(req.body.post)) throw new Error('ID')
-    const post = await Post.findById(req.body.post).orFail(new Error('NOT FOUND'))
-    if (post.isPrivate) throw new Error('isPrivate')
+//     // user.collected.push({ post: req.body.post })
+//     // await user.save()
 
-    let userCollected = await UserCollected.findOne({ user: req.user._id })
-    if (!userCollected) {
-      userCollected = new UserCollected({ user: req.user._id, postId: [] })
-    }
-
-    const idx = userCollected.postId.findIndex((item) => item.toString() === req.body.post)
-    // const user = await User.findById(req.user._id)
-
-    if (idx > -1) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        success: false,
-        message: '卡片已經存在於收藏清單中',
-      })
-    } else {
-      userCollected.postId.push(req.body.post)
-    }
-    await userCollected.save()
-
-    // user.collected.push({ post: req.body.post })
-    // await user.save()
-
-    res.status(StatusCodes.OK).json({
-      success: true,
-      message: '收藏清單已更新',
-      result: {
-        userCollected: userCollected.postId,
-      },
-    })
-  } catch (error) {
-    console.log(error)
-    if (error.name === 'CastError' || error.message === 'ID') {
-      res.status(StatusCodes.NOT_FOUND).json({
-        success: false,
-        message: '卡片 ID 錯誤',
-      })
-    } else if (error.message === 'NOT FOUND') {
-      res.status(StatusCodes.BAD_REQUEST).json({
-        success: false,
-        message: '查無卡片',
-      })
-    } else if (error.message === 'isPrivate') {
-      res.status(StatusCodes.BAD_REQUEST).json({
-        success: false,
-        message: '私人卡片',
-      })
-    } else if (error.name === 'ValidationError') {
-      const key = Object.keys(error.errors)[0]
-      res.status(StatusCodes.BAD_REQUEST).json({
-        success: false,
-        message: error.errors[key].message,
-      })
-    } else {
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        success: false,
-        message: '伺服器錯誤',
-      })
-    }
-  }
-}
+//     res.status(StatusCodes.OK).json({
+//       success: true,
+//       message: '收藏清單已更新',
+//       result: {
+//         userCollect: userCollect.postId,
+//       },
+//     })
+//   } catch (error) {
+//     console.log(error)
+//     if (error.name === 'CastError' || error.message === 'ID') {
+//       res.status(StatusCodes.NOT_FOUND).json({
+//         success: false,
+//         message: '卡片 ID 錯誤',
+//       })
+//     } else if (error.message === 'NOT FOUND') {
+//       res.status(StatusCodes.BAD_REQUEST).json({
+//         success: false,
+//         message: '查無卡片',
+//       })
+//     } else if (error.message === 'isPrivate') {
+//       res.status(StatusCodes.BAD_REQUEST).json({
+//         success: false,
+//         message: '私人卡片',
+//       })
+//     } else if (error.name === 'ValidationError') {
+//       const key = Object.keys(error.errors)[0]
+//       res.status(StatusCodes.BAD_REQUEST).json({
+//         success: false,
+//         message: error.errors[key].message,
+//       })
+//     } else {
+//       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+//         success: false,
+//         message: '伺服器錯誤',
+//       })
+//     }
+//   }
+// }

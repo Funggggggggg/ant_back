@@ -13,4 +13,4 @@ const UserCollectedSchema = new Schema({
   },
 })
 
-export default model('UserCollected', UserCollectedSchema)
+export default model('UserCollect', UserCollectedSchema)

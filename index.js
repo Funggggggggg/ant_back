@@ -4,8 +4,7 @@ import mongoose from 'mongoose'
 import { StatusCodes } from 'http-status-codes'
 import routerUser from './routers/user.js'
 import routerPost from './routers/post.js'
-// FIXME
-// import routerOrder from './routers/order.js'
+import routerUserCollect from './routers/userCollect.js'
 import cors from 'cors' //搭配 express 處理跨域請求設定
 import './passport.js'
 
@@ -57,8 +56,7 @@ app.use((error, req, res, next) => {
 
 app.use('/user', routerUser)
 app.use('/post', routerPost)
-// FIXME
-// app.use('/order', routerOrder)
+app.use('/userCollect', routerUserCollect)
 
 app.listen(process.env.PORT || 4000, () => {
   console.log('伺服器啟動')

@@ -47,7 +47,7 @@ export const jwt = (req, res, next) => {
       if (info instanceof jsonwebtoken.JsonWebTokenError) {
         return res.status(StatusCodes.BAD_REQUEST).json({
           success: false,
-          message: 'userTokenInvalid',
+          message: '用戶Token無效',
         })
       }
       // 伺服器錯誤，可能是打錯字或出 bug
