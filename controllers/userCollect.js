@@ -53,20 +53,21 @@ import { StatusCodes } from 'http-status-codes'
 export const getCollected = async (req, res) => {
   try {
     const userId = req.user._id // 從 token 取得用戶 ID
-    const userCollect = await UserCollect.findOne({ user: userId }).populate('postId')
-    if (!userCollect || userCollect.postId.length === 0) {
+    const userCollect = await UserCollect.find({ user: userId }).populate('postId')
+    console.log('取得會員個別日誌:', userCollect) // 添加日誌檢查數據
+    if (!userCollect || userCollect.length === 0) {
       return res.status(StatusCodes.NOT_FOUND).json({
         success: false,
         message: '收藏清單不存在',
       })
     }
 
-    console.log('收藏清單:', userCollect.postId) // 添加日誌檢查數據
+    console.log('收藏清單:', userCollect) // 添加日誌檢查數據
 
     res.status(StatusCodes.OK).json({
       success: true,
       message: '收藏清單已取得',
-      result: userCollect.postId,
+      result: userCollect[0].postId,
     })
   } catch (error) {
     console.log(error)
