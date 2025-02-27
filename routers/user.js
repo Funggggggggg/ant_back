@@ -12,6 +12,7 @@ router.post('/login', auth.login, user.login)
 
 // 使用者資料相關
 router.get('/profile', auth.jwt, user.profile)
+// router.get('/:id', auth.jwt, user.getUserById) // 根據用戶 ID 獲取特定用戶的資料
 router.patch('/refresh', auth.jwt, user.refresh) // 舊換新
 router.delete('/logout', auth.jwt, user.logout) // 登出
 

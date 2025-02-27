@@ -119,6 +119,20 @@ export const logout = async (req, res) => {
   }
 }
 
+// 根據用戶 ID 獲取特定用戶的資料
+// export const getUserById = async (req, res) => {
+//   try {
+//     const user = await User.findById(req.params.id).select('-password') // 不返回密碼
+//     if (!user) {
+//       return res.status(404).json({ message: '用戶不存在' })
+//     }
+//     res.json({ result: user })
+//   } catch (error) {
+//     res.status(500).json({ message: '伺服器錯誤' })
+//     console.error(error)
+//   }
+// }
+
 // export const updateCollected = async (req, res) => {
 //   try {
 //     if (!validator.isMongoId(req.body.post)) throw new Error('ID')
