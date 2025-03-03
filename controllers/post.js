@@ -1,7 +1,8 @@
+// import mongoose from 'mongoose'
 import { StatusCodes } from 'http-status-codes'
 import Post from '../models/post.js'
-// import User from '../models/user.js'
 import validator from 'validator'
+// import User from '../models/user.js'
 
 export const create = async (req, res) => {
   // console.log('222222222222', req.body)
@@ -77,6 +78,14 @@ export const getUserAllPosts = async (req, res) => {
       })
     }
 
+    // 確保 userId 是 ObjectId
+    if (!validator.isMongoId(userId)) {
+      return res.status(400).json({
+        success: false,
+        message: '無效的用戶 ID',
+      })
+    }
+
     // 直接透過用戶 ID 查詢文章
     const result = await Post.find({ user: userId }).populate('user', 'account email introduce')
     console.log('取得的文章:', result)
@@ -111,7 +120,6 @@ export const getId = async (req, res) => {
       result,
     })
   } catch (error) {
-    // 錯誤訊息可以打得詳細一點!
     console.log('controller post getId', error)
     if (error.name === 'CastError' || error.message === 'ID') {
       res.status(StatusCodes.BAD_REQUEST).json({
